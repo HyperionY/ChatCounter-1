@@ -1,36 +1,38 @@
 package edu.handong.csee.java.chatcounter;
 
+import java.io.BufferedReader;
 import java.io.EOFException;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.Scanner;
 
 public class FileLoader {
 	String data = null;
-	public void ScanFile(String fileName) {
+	private File file;
+	public FileLoader(String filename) {
+		file = new File(filename);
+	}
+	
+	public void ScanFile() {
 		String cache = null;
 		try {
-			ObjectInputStream stream = new ObjectInputStream(new FileInputStream(fileName));
-			Scanner scanner = new Scanner(stream);
-			while(scanner.hasNext()) {
-				cache = scanner.next();
-				data = data + cache;
-				scanner.close();
-				stream.close();
+			FileReader freader = new FileReader(file);
+			BufferedReader breader = new BufferedReader(freader);
+			while((cache = breader.readLine())!=null) {
+				this.data = this.data+cache;
 			}
+			breader.close();
 		} catch(FileNotFoundException e) {
-			System.out.println("Error while opening the file " + fileName);
+			this.data = "Error while opening the file ";
 		}
 		
 		catch (EOFException e) {
-			System.out.println("Error while reading the file " + fileName);
-			System.out.println("End of the file.");
+			this.data = "Error while reading the file "+"\nEnd of the file.";
 		}
 		
 		catch (IOException e) {
-			System.out.println("Error while reading the file " + fileName);
+			this.data = "Error while reading the file ";
 		}
 	}
 	
